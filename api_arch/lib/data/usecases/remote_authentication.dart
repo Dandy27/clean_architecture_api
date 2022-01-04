@@ -1,4 +1,4 @@
-import 'package:api_arch/domain/entities/account/account_entity.dart';
+import 'package:api_arch/domain/helpers/helpers.dart';
 
 import '../../domain/usecase/authentication.dart';
 import '../http/http.dart';
@@ -10,7 +10,12 @@ class RemoteAuthentication {
   RemoteAuthentication({required this.httpClient, required this.url});
   Future<void> auth(AuthenticationParams params) async {
     final body = RemoteAuthenticationParams.fromDomain(params).toJson();
-    await httpClient.request(url: url, method: 'post', body: body);
+
+    try {
+      await httpClient.request(url: url, method: 'post', body: body);
+    } on HttpError {
+      throw DomainError.unexpected;
+    }
   }
 }
 

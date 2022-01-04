@@ -1,13 +1,11 @@
 import 'package:api_arch/data/http/http.dart';
 import 'package:api_arch/data/usecases/remote_authentication.dart';
+import 'package:api_arch/domain/helpers/helpers.dart';
 import 'package:api_arch/domain/usecase/authentication.dart';
 
 import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-
-
-
 
 class HttpClientSpy extends Mock implements HttpClient {}
 
@@ -31,5 +29,12 @@ void main() {
       'email': params.email,
       'password': params.secret,
     }));
+  });
+
+  test('Should throw Unexpected if HttpClient return 400', () async {
+    when(() => httpClient.request(
+        url: 'url',
+        method: 'method',
+        body: 'body' as dynamic)).thenThrow(HttpError.badRequest);
   });
 }
