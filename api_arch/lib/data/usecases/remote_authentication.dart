@@ -1,14 +1,14 @@
-import 'package:api_arch/domain/entities/entities.dart';
+import 'package:api_arch/domain/entities/account/account_entity.dart';
 
-import '../../domain/usecases/authentication.dart';
-import '../http/http_client.dart';
+import '../../domain/usecase/authentication.dart';
+import '../http/http.dart';
 
 class RemoteAuthentication {
   final HttpClient httpClient;
   final String url;
 
   RemoteAuthentication({required this.httpClient, required this.url});
-  Future<void>? auth(AuthenticationParams params) async {
+  Future<void> auth(AuthenticationParams params) async {
     final body = RemoteAuthenticationParams.fromDomain(params).toJson();
     await httpClient.request(url: url, method: 'post', body: body);
   }
@@ -24,7 +24,10 @@ class RemoteAuthenticationParams {
   });
 
   factory RemoteAuthenticationParams.fromDomain(AuthenticationParams params) =>
-      RemoteAuthenticationParams(email: params.email, password: params.secret);
+      RemoteAuthenticationParams(
+        email: params.email,
+        password: params.secret,
+      );
 
   Map toJson() => {
         'email': email,
