@@ -8,7 +8,7 @@
 4. Sistema entrega os dados da conta do usuário
 
 > ## Exeção - URL inválida
-1.  Sistema retorna uma mensagem de erro insperado
+1.  Sistema retorna uma mensagem de erro insperado -> ok
 
 > ## Exceção - Dados inválidos
 1. Sistema retorna uma mensagem de erro inesperado -> ok
@@ -17,12 +17,12 @@
 1. Sistema retorna uma mensagem de erro inesperado 
 
 > ## Ex  ceção - Falha no servidor 
-1. Sistema retorna uma mensagem de erro inesperado 
+1. Sistema retorna uma mensagem de erro inesperado -> ok
 
 > ## Exceção - Credenciais onválidas 
-1. Sistema retorna uma mensagem de ero inesperado que as credenciais estão erradas 
+1. Sistema retorna uma mensagem de ero inesperado que as credenciais estão erradas -> ok
+
 
 <!--  -->
 
 
-//TODO Testando casos de exceção do HttpClient
