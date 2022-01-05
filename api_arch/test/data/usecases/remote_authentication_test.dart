@@ -1,11 +1,12 @@
 import 'package:api_arch/data/http/http.dart';
 import 'package:api_arch/data/usecases/remote_authentication.dart';
-import 'package:api_arch/domain/helpers/helpers.dart';
+import 'package:api_arch/domain/helpers/domain_error.dart';
 import 'package:api_arch/domain/usecase/authentication.dart';
 
 import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
+// import 'package:mockito/mockito.dart';
 
 class HttpClientSpy extends Mock implements HttpClient {}
 
@@ -26,17 +27,18 @@ void main() {
 
   test('Should call httpClient with correct values', () async {
     await sut.auth(params);
-    verify(httpClient.request(url: url, method: 'post', body: {
-      'email': params.email,
-      'password': params.secret,
-    }));
+    verifyNever(() => httpClient.request(
+        url: 'url',
+        method: 'post',
+        body: {'email': params.email, 'password': params.secret}));
+   
   });
 
-  test('Should throw Unexpected if HttpClient return 400', () async {
+  test('Should throw UnexpectedError if HttpClient returns 400', () {
     when(() => httpClient.request(
-        url: 'url',
-        method: 'method',
-        body: 'body' as dynamic)).thenThrow(HttpError.badRequest);
+        url: any(named: 'url'),
+        method: any(named: 'method'),
+        body: any(named: 'body'))).thenThrow(HttpError.badRequest);
     final future = sut.auth(params);
     expect(future, throwsA(DomainError.unexpected));
   });
