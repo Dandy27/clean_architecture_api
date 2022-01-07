@@ -1,4 +1,4 @@
-# Remote Authentication Usse Case 
+# Remote Authentication Use Case 
 
 
 ## Caso de sucesso

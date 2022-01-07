@@ -1,7 +1,7 @@
-import '../entities/account/account_entity.dart';
+import 'package:api_arch/domain/entities/account_entity.dart';
 
 abstract class Authentication {
-  Future<AccountEntity> auth({AuthenticationParams params});
+  Future<AccountEntity> auth(AuthenticationParams params);
 }
 
 class AuthenticationParams {
@@ -13,5 +13,4 @@ class AuthenticationParams {
     required this.secret,
   });
 
-  
 }
