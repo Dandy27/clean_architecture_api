@@ -23,6 +23,14 @@ void main() {
         email: faker.internet.email(), secret: faker.internet.password());
   });
   test('Should call HtppClient with correct values', () async {
+    when(() =>
+        httpClient.request(
+            url: any(named: 'url'),
+            method: any(named: 'method'),
+            body: any(named: 'body'))).thenAnswer((_) async => {
+          'accessToken': faker.guid.guid(),
+          'name': faker.person.name(),
+        });
     await sut.auth(params);
 
     verifyNever(() => httpClient.request(url: 'url', method: 'post', body: {
@@ -64,16 +72,22 @@ void main() {
 
     expect(future, throwsA(DomainError.unexpected));
   });
-  test('Should thorw InvalidCredencialsError  if HttpClient returs 401',
-      () async {
-    when(() => httpClient.request(
-        url: any(named: 'url'),
-        method: any(named: 'method'),
-        body: any(named: 'body'))).thenThrow(HttpError.unauthorized);
+  test('Should return an Account if HttpClient returs 200', () async {
+    final accessToken = faker.guid.guid();
+    when(() =>
+        httpClient.request(
+            url: any(named: 'url'),
+            method: any(named: 'method'),
+            body: any(named: 'body'))).thenAnswer((_) async => {
+          'accessToken': accessToken,
+          'name': faker.person.name(),
+        });
+
     final params = AuthenticationParams(
         email: faker.internet.email(), secret: faker.internet.password());
-    final future = sut.auth(params);
 
-    expect(future, throwsA(DomainError.invalidCredentials));
+    final account = await sut.auth(params);
+
+    expect(account.token, accessToken);
   });
 }
