@@ -1,5 +1,5 @@
 import 'package:api_arch/data/http/http.dart';
-import 'package:api_arch/domain/entities/entities.dart';
+import 'package:api_arch/domain/helpers/domain_error.dart';
 import 'package:api_arch/domain/usecases/usecases.dart';
 
 class RemoteAuthentication {
@@ -12,11 +12,17 @@ class RemoteAuthentication {
   });
   Future<void> auth(AuthenticationParams params) async {
     final body = RemoteAuthenticationParams.fromDomain(params).toJason();
-    await httpClient.request(
-      url: url,
-      method: 'post',
-      body: body,
-    );
+    try {
+      await httpClient.request(
+        url: url,
+        method: 'post',
+        body: body,
+      );
+    } on HttpError catch (error) {
+      throw error == HttpError.unauthorized
+          ? DomainError.invalidCredentials
+          : DomainError.unexpected;
+    }
   }
 }
 

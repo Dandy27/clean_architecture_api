@@ -1,0 +1,6 @@
+
+enum DomainError {
+  unexpected,
+  invalidCredentials
+  
+}
