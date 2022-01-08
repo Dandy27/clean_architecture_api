@@ -23,12 +23,13 @@ void main() {
         email: faker.internet.email(), secret: faker.internet.password());
   });
   test('Should call HtppClient with correct values', () async {
+    final accessToken = faker.guid.guid();
     when(() =>
         httpClient.request(
             url: any(named: 'url'),
             method: any(named: 'method'),
             body: any(named: 'body'))).thenAnswer((_) async => {
-          'accessToken': faker.guid.guid(),
+          'accessToken': accessToken,
           'name': faker.person.name(),
         });
     await sut.auth(params);
@@ -39,7 +40,7 @@ void main() {
         }));
   });
 
-  test('Should thorw UnxpectedError if HttpClient returs 400', () async {
+  test('Should thorw UnxpectedError if HttpClient returns 400', () async {
     when(() => httpClient.request(
         url: any(named: 'url'),
         method: any(named: 'method'),
@@ -50,7 +51,7 @@ void main() {
 
     expect(future, throwsA(DomainError.unexpected));
   });
-  test('Should thorw UnxpectedError if HttpClient returs 404', () async {
+  test('Should thorw UnxpectedError if HttpClient returns 404', () async {
     when(() => httpClient.request(
         url: any(named: 'url'),
         method: any(named: 'method'),
@@ -61,7 +62,7 @@ void main() {
 
     expect(future, throwsA(DomainError.unexpected));
   });
-  test('Should thorw UnxpectedError if HttpClient returs 500', () async {
+  test('Should thorw UnxpectedError if HttpClient returns 500', () async {
     when(() => httpClient.request(
         url: any(named: 'url'),
         method: any(named: 'method'),
@@ -72,7 +73,7 @@ void main() {
 
     expect(future, throwsA(DomainError.unexpected));
   });
-  test('Should return an Account if HttpClient returs 200', () async {
+  test('Should return an Account if HttpClient returns 200', () async {
     final accessToken = faker.guid.guid();
     when(() =>
         httpClient.request(
