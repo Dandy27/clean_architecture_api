@@ -25,8 +25,8 @@ void main() {
   void mockHttpData(Map data) =>
       mockRequest(httpClient).thenAnswer((_) async => data);
 
-  void mockHttpError(HttpError error) =>
-      mockRequest(httpClient).thenThrow((_) async => error);
+  // void mockHttpError(HttpError error) =>
+  //     mockRequest(httpClient).thenThrow((_) async => error);
 
   setUp(() {
     httpClient = HttpClientSpy();
