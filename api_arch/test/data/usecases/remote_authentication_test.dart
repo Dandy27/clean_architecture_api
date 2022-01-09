@@ -5,7 +5,6 @@ import 'package:api_arch/domain/usecases/usecases.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-// import 'package:flutter_test/flutter_test.dart';
 
 class HttpClientSpy extends Mock implements HttpClient {}
 
@@ -45,8 +44,7 @@ void main() {
         url: any(named: 'url'),
         method: any(named: 'method'),
         body: any(named: 'body'))).thenThrow(HttpError.badRequest);
-    final params = AuthenticationParams(
-        email: faker.internet.email(), secret: faker.internet.password());
+
     final future = sut.auth(params);
 
     expect(future, throwsA(DomainError.unexpected));
@@ -56,8 +54,7 @@ void main() {
         url: any(named: 'url'),
         method: any(named: 'method'),
         body: any(named: 'body'))).thenThrow(HttpError.notFound);
-    final params = AuthenticationParams(
-        email: faker.internet.email(), secret: faker.internet.password());
+
     final future = sut.auth(params);
 
     expect(future, throwsA(DomainError.unexpected));
@@ -67,11 +64,20 @@ void main() {
         url: any(named: 'url'),
         method: any(named: 'method'),
         body: any(named: 'body'))).thenThrow(HttpError.serverError);
-    final params = AuthenticationParams(
-        email: faker.internet.email(), secret: faker.internet.password());
+
     final future = sut.auth(params);
 
     expect(future, throwsA(DomainError.unexpected));
+  });
+  test('Should thorw InvalidCredential if HttpClient returns 401', () async {
+    when(() => httpClient.request(
+        url: any(named: 'url'),
+        method: any(named: 'method'),
+        body: any(named: 'body'))).thenThrow(HttpError.unauthorized);
+
+    final future = sut.auth(params);
+
+    expect(future, throwsA(DomainError.invalidCredentials));
   });
   test('Should return an Account if HttpClient returns 200', () async {
     final accessToken = faker.guid.guid();
@@ -83,9 +89,6 @@ void main() {
           'accessToken': accessToken,
           'name': faker.person.name(),
         });
-
-    final params = AuthenticationParams(
-        email: faker.internet.email(), secret: faker.internet.password());
 
     final account = await sut.auth(params);
 
@@ -103,8 +106,6 @@ void main() {
           'name': faker.person.name(),
         });
 
-    final params = AuthenticationParams(
-        email: faker.internet.email(), secret: faker.internet.password());
     final future = sut.auth(params);
 
     expect(future, throwsA(DomainError.unexpected));
