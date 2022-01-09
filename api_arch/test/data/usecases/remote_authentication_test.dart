@@ -103,7 +103,6 @@ void main() {
             method: any(named: 'method'),
             body: any(named: 'body'))).thenAnswer((_) async => {
           'invalid_key': 'invalid_value',
-          'name': faker.person.name(),
         });
 
     final future = sut.auth(params);
